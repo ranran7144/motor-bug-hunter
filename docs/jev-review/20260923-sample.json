@@ -1,0 +1,476 @@
+{
+  "run_id": "20260923T081008Z-82e3fb99",
+  "created_at": "2026-09-23T08:10:08.465991+00:00",
+  "provider": "classifier",
+  "context_mode": "standalone",
+  "document": null,
+  "question_definitions": [
+    {
+      "id": "ambiguity",
+      "title": "曖昧性",
+      "labels": [
+        "ambiguous",
+        "clear"
+      ],
+      "instructions": "Could competent readers give materially different interpretations of the required behavior, scope, terms or timing using the permitted context?",
+      "criteria": {
+        "ambiguous": "Materially different interpretations remain, including undefined qualitative terms or vague timing.",
+        "clear": "The required meaning has one sufficiently precise interpretation within its stated scope."
+      }
+    },
+    {
+      "id": "testability",
+      "title": "検証可能性",
+      "labels": [
+        "testable",
+        "not_testable"
+      ],
+      "instructions": "Can an objective verification procedure distinguish satisfaction from violation using the requirement and permitted context? Verification may be testing, inspection, analysis or measurement; it need not use only a runtime trace.",
+      "criteria": {
+        "testable": "Objective conditions and acceptance criteria can be established without inventing normative details.",
+        "not_testable": "A decisive acceptance criterion or essential operational detail must be invented before objective verification."
+      }
+    },
+    {
+      "id": "atomicity",
+      "title": "単一要件性",
+      "labels": [
+        "atomic",
+        "compound"
+      ],
+      "instructions": "Does the target impose one verifiable obligation or several? A condition plus one required result is one obligation. A coherent defined destination state can be one outcome; separate independently verifiable duties are multiple obligations. Context is not part of the target's obligation count.",
+      "criteria": {
+        "atomic": "One obligation, possibly with multiple prerequisites or one defined composite state as its outcome.",
+        "compound": "Several independently verifiable obligations or behaviors have been combined into the target."
+      }
+    },
+    {
+      "id": "subject",
+      "title": "主体",
+      "labels": [
+        "specified",
+        "missing"
+      ],
+      "instructions": "Is a responsible actor explicitly identified in the target or permitted scope definition? A named generic actor such as the device counts as specified; imprecise actor identity is a separate ambiguity issue. Do not infer an actor from passive wording alone.",
+      "criteria": {
+        "specified": "A responsible device, software component, system, harness or person is explicitly named or unambiguously assigned by supplied scope.",
+        "missing": "No responsible actor is explicitly stated or assigned by permitted scope."
+      }
+    },
+    {
+      "id": "trigger",
+      "title": "トリガ条件",
+      "labels": [
+        "specified",
+        "missing"
+      ],
+      "instructions": "Is an applicability condition or triggering event explicitly stated? Presence and precision are separate. A stated qualitative event counts as present even if its definition is vague; assess that vagueness under ambiguity/testability/quantitative. An explicit unconditional or invariant scope also counts as present.",
+      "criteria": {
+        "specified": "An explicit event, condition, phase, precondition, or unconditional/invariant scope is stated.",
+        "missing": "No triggering condition or explicit unconditional scope is given."
+      }
+    },
+    {
+      "id": "completion",
+      "title": "完了条件",
+      "labels": [
+        "specified",
+        "missing"
+      ],
+      "instructions": "Is a required terminal result, output, postcondition or maintained invariant explicitly named? A named terminal behavior such as stopping counts as present even if its exact physical threshold is imprecise. Assess precision elsewhere. Merely starting unspecified processing does not identify a terminal result.",
+      "criteria": {
+        "specified": "The required terminal result, output, postcondition or maintained invariant is explicitly identified.",
+        "missing": "Only an initiation, vague handling instruction or activity is given without an identified terminal result or required invariant."
+      }
+    },
+    {
+      "id": "quantitative",
+      "title": "定量条件",
+      "labels": [
+        "sufficient",
+        "insufficient"
+      ],
+      "instructions": "Are the numeric bounds, units, deadlines, tolerances and comparison boundaries needed for this particular obligation sufficient? Do not demand numbers for purely categorical or logical obligations that need none. A timing claim requires an objectively bounded timing criterion. Use explicit contextual constants where available; do not import real-hardware guarantees into a bounded SIL specification.",
+      "criteria": {
+        "sufficient": "All necessary quantitative criteria are supplied, or the obligation can be evaluated without quantitative criteria.",
+        "insufficient": "At least one numeric criterion needed to decide this obligation is absent or materially underdefined."
+      }
+    },
+    {
+      "id": "safety",
+      "title": "安全関連",
+      "labels": [
+        "safety_related",
+        "ordinary"
+      ],
+      "instructions": "Does the target concern preventing or mitigating hazardous device behavior, protective shutdown, unsafe energization, interlocks or a directly supporting safety function? This is a topic classification, not a defect verdict or safety certification. Do not infer safety from a preassigned importance grade.",
+      "criteria": {
+        "safety_related": "The obligation directly concerns hazard prevention, mitigation or a supporting protective function.",
+        "ordinary": "The obligation is ordinary functionality, observability or administration without an identified direct safety role."
+      }
+    }
+  ],
+  "results": [
+    {
+      "requirement_id": "SAMPLE-001",
+      "text": "異常が発生した場合、装置は速やかに停止する。",
+      "context": "",
+      "questions": {
+        "ambiguity": {
+          "label": "ambiguous",
+          "confidence": 0.99,
+          "scores": {
+            "ambiguous": 0.99,
+            "clear": 0.01
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "testability": {
+          "label": "not_testable",
+          "confidence": 0.8,
+          "scores": {
+            "testable": 0.1,
+            "not_testable": 0.9
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "atomicity": {
+          "label": "atomic",
+          "confidence": 0.99,
+          "scores": {
+            "atomic": 0.99,
+            "compound": 0.01
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "subject": {
+          "label": "specified",
+          "confidence": 0.93,
+          "scores": {
+            "specified": 0.96,
+            "missing": 0.04
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "trigger": {
+          "label": "specified",
+          "confidence": 0.99,
+          "scores": {
+            "specified": 0.99,
+            "missing": 0.01
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "completion": {
+          "label": "specified",
+          "confidence": 1,
+          "scores": {
+            "specified": 1,
+            "missing": 0
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "quantitative": {
+          "label": "insufficient",
+          "confidence": 0.95,
+          "scores": {
+            "sufficient": 0.03,
+            "insufficient": 0.97
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        },
+        "safety": {
+          "label": "safety_related",
+          "confidence": 1,
+          "scores": {
+            "safety_related": 1,
+            "ordinary": 0
+          },
+          "provider": "classifier",
+          "model": "jev-1.13.0",
+          "abstained": false
+        }
+      },
+      "needs_review": true,
+      "models": [
+        "jev-1.13.0"
+      ]
+    }
+  ],
+  "summary": {
+    "requirements": 1,
+    "completed": 1,
+    "abstained": 0,
+    "needs_review": 1,
+    "by_question": {
+      "ambiguity": {
+        "labels": {
+          "ambiguous": 1,
+          "clear": 0
+        },
+        "abstained": 0
+      },
+      "testability": {
+        "labels": {
+          "testable": 0,
+          "not_testable": 1
+        },
+        "abstained": 0
+      },
+      "atomicity": {
+        "labels": {
+          "atomic": 1,
+          "compound": 0
+        },
+        "abstained": 0
+      },
+      "subject": {
+        "labels": {
+          "specified": 1,
+          "missing": 0
+        },
+        "abstained": 0
+      },
+      "trigger": {
+        "labels": {
+          "specified": 1,
+          "missing": 0
+        },
+        "abstained": 0
+      },
+      "completion": {
+        "labels": {
+          "specified": 1,
+          "missing": 0
+        },
+        "abstained": 0
+      },
+      "quantitative": {
+        "labels": {
+          "sufficient": 0,
+          "insufficient": 1
+        },
+        "abstained": 0
+      },
+      "safety": {
+        "labels": {
+          "safety_related": 1,
+          "ordinary": 0
+        },
+        "abstained": 0
+      }
+    }
+  },
+  "models": [
+    "jev-1.13.0"
+  ],
+  "requests": [
+    {
+      "provider": "classifier",
+      "question": [
+        "ambiguity"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 2406.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 349
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2999",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "testability"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 1250.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 184
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2998",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "atomicity"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 1078.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 188
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2997",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "subject"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 1360.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 435
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2996",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "trigger"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 797.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 193
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2995",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "completion"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 718.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 172
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2994",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "quantitative"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 1063.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 205
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2993",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    },
+    {
+      "provider": "classifier",
+      "question": [
+        "safety"
+      ],
+      "count": 1,
+      "attempt": 1,
+      "latency_ms": 953.0,
+      "model": "jev-1.13.0",
+      "usage": {
+        "classifications": 1,
+        "escalated": 0,
+        "ms": 180
+      },
+      "status": 200,
+      "error": null,
+      "retry_wait_ms": 0,
+      "cost_usd": null,
+      "rate_limit_remaining": "2992",
+      "models_used": [
+        "jev-1.13.0"
+      ]
+    }
+  ],
+  "errors": [],
+  "artifact_directory": null,
+  "source_hashes": {
+    "MOTOR_ECU_REQUIREMENTS.md": "332e72fade6c2d14b600347cee272c040b26993f2e2cda0bed640930810f541d",
+    "requirement_review.py": "15140887d6fc5172345e50a03a9ee8489f4bc260af84ebb32aa90401ece5df9e",
+    "oracle.py": "03389b25604636c8c4b42f99901d7e91082ba1ca9c23cdd39204e59937104be2"
+  },
+  "questions_sha256": "0f617364e288eac107b7a6cde7a2e673ed0abaf08153c60c918a86b9a67bd349",
+  "inputs_sha256": "f7ba46fa597be0890ece0745c4ed09217015bbf1303a1b5c01c6d9444618e220"
+}

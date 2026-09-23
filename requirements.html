@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>要件レビュー | Motor ECU Bug Hunter</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/requirements.css">
+  <script src="/requirements.js" defer></script>
+</head>
+<body class="requirements-page">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>BUG HUNTER<small>EMBEDDED SOFTWARE LAB</small></span></a>
+      <div class="workspace-label">WORKSPACE <span>01</span></div>
+      <nav aria-label="メインナビゲーション">
+        <a class="nav-link" href="/"><span aria-hidden="true">◈</span>挙動の評価</a>
+        <a class="nav-link active" href="/requirements" aria-current="page"><span aria-hidden="true">≡</span>要件レビュー</a>
+      </nav>
+      <div class="sidebar-spec"><div class="eyebrow">REQUIREMENT QUALITY</div><strong>小型モータ制御 ECU</strong><p>文章を 8 つの観点から判定</p><div class="req-sidebar-axes">明確さ · 検証可能性<br>構造 · 条件 · 安全関連</div></div>
+      <div class="sidebar-bottom"><span class="status-dot"></span>LOCAL EXPERIMENT<span class="version">v0.1</span></div>
+    </aside>
+    <main>
+      <header class="topbar"><div class="breadcrumb">Motor ECU <span>/</span> Requirements</div><span class="environment"><span class="status-dot"></span>REQUIREMENT REVIEW</span></header>
+      <div class="main-content">
+        <section class="page-heading"><div><div class="eyebrow cyan">JEV / REQUIREMENT QUALITY</div><h1>要件を、<span>8 つの観点で読む。</span></h1><p class="page-subtitle">要件の文章と前提を送り、判定ラベル・確率・使用モデルを確認します。</p></div><a class="button secondary disabled" id="req-download" href="/api/requirements/report" download="requirements-review.json" aria-disabled="true">JSON を保存</a></section>
+
+        <section class="panel req-input-panel" aria-labelledby="req-input-title">
+          <div class="panel-heading"><div><div class="eyebrow">REVIEW INPUT</div><h2 id="req-input-title">判定する要件</h2></div><span class="quiet-badge">8 QUESTIONS / REQUIREMENT</span></div>
+          <form id="req-form">
+            <div class="req-controls">
+              <label for="input-mode">入力元<select id="input-mode"><option value="custom">自由入力 · 1 要件</option><option value="document">作成した要件仕様書</option></select></label>
+              <label for="req-provider">判定プロバイダー<select id="req-provider"><option value="classifier">classifier.dev</option><option value="typesafe">TypeSafe / Jev</option></select></label>
+              <label for="context-mode">判定に含める前提<select id="context-mode"><option value="standalone">要件文のみ</option><option value="document">仕様書の共通定義も含める</option></select></label>
+            </div>
+            <div id="req-custom-input"><label class="req-field-label" for="requirement-text">Requirement</label><textarea id="requirement-text" rows="4" maxlength="12000" required>異常が発生した場合、装置は速やかに停止する。</textarea><div class="req-text-footer"><span>1 つの入力を 1 要件として判定します。</span><span id="req-character-count">25 文字</span></div></div>
+            <div id="req-document-input" hidden>
+              <div class="req-document-heading"><div><strong id="req-document-title">要件仕様書を読み込み中…</strong><p id="req-document-version" class="req-muted"></p></div><label class="req-checkbox"><input type="checkbox" id="req-all">仕様書の全要件を判定</label></div>
+              <div class="req-catalogue-tools"><label class="req-search-label" for="req-catalogue-search">要件を検索<input type="search" id="req-catalogue-search" placeholder="要件 ID・本文"></label><span id="req-selection-count">0 件を選択</span></div>
+              <div class="req-catalogue" id="req-catalogue" aria-label="判定対象の要件一覧"></div>
+            </div>
+            <p class="req-context-note" id="req-context-note">選択した要件文と 8 つの判定基準を API に送信します。仕様書の共通定義を補わず、文章自体を評価します。</p>
+            <div class="req-submit-row"><p class="req-muted">実行ボタンを押すと外部 API に送信します。ページ表示だけでは判定を実行しません。</p><button class="button primary" type="submit" id="req-run" disabled>8 つの観点で判定する</button></div>
+          </form>
+        </section>
+
+        <div class="run-status" id="req-status" role="status" aria-live="polite"><div><span class="status-dot"></span><strong id="req-phase">LOADING</strong><span id="req-message">読み込み中…</span></div><span class="run-id" id="req-run-id">NO RUN YET</span></div>
+        <div class="error-banner" id="req-error" role="alert" hidden></div>
+
+        <section class="metrics-grid req-metrics" aria-label="判定結果の集計">
+          <article class="metric-card"><div class="metric-title">判定対象</div><div class="metric-value"><span id="req-total">—</span><small>要件</small></div><div class="metric-foot" id="req-completed">完了数は実行後に表示</div></article>
+          <article class="metric-card featured"><div class="metric-title">見直し候補</div><div class="metric-value cyan"><span id="req-review-count">—</span><small>要件</small></div><div class="metric-foot">品質 7 観点に指摘がある要件</div></article>
+          <article class="metric-card"><div class="metric-title">保留</div><div class="metric-value"><span id="req-abstained-count">—</span><small>要件</small></div><div class="metric-foot">いずれかの観点で有効な回答なし</div></article>
+          <article class="metric-card"><div class="metric-title">安全関連</div><div class="metric-value"><span id="req-safety-count">—</span><small>要件</small></div><div class="metric-foot">レビュー優先度の目安 · 品質の欠陥ではありません</div></article>
+        </section>
+
+        <section class="panel req-results-panel" aria-labelledby="req-results-title">
+          <div class="panel-heading"><div><div class="eyebrow">REVIEW MATRIX</div><h2 id="req-results-title">観点ごとの判定 <span class="count-badge" id="req-result-count">0</span></h2></div><label class="req-filter-label" for="req-result-filter">表示<select id="req-result-filter"><option value="all">すべて</option><option value="review">見直し候補</option><option value="safety">安全関連</option><option value="pending">保留あり</option></select></label></div>
+          <p class="req-results-note" id="req-results-note">行を選ぶと、全ラベルの確率と使用モデルを確認できます。</p>
+          <div class="table-scroll req-table-scroll"><table class="case-table req-table"><caption class="visually-hidden">各要件に対する 8 観点の判定</caption><thead><tr id="req-results-head"><th scope="col">要件</th></tr></thead><tbody id="req-results-body"></tbody></table><div class="empty-state" id="req-results-empty"><div class="empty-icon" aria-hidden="true">≡</div><strong>まだ判定結果はありません</strong><p>要件を入力して、判定を実行してください。</p></div></div>
+          <div class="table-footer"><span id="req-visible-count">0 件</span><span>confidence はモデルの確信度です。正解率を表しません。</span></div>
+        </section>
+
+        <section class="panel req-detail-panel" id="req-detail" aria-labelledby="req-detail-title">
+          <div class="panel-heading"><div><div class="eyebrow">REQUIREMENT INSPECTOR</div><h2 id="req-detail-title">要件を選択</h2></div><span class="quiet-badge" id="req-detail-id">NO SELECTION</span></div>
+          <div class="inspector-empty" id="req-detail-empty">判定結果から要件を選ぶと、8 つの判断を確認できます。</div>
+          <div id="req-detail-content" hidden><blockquote class="req-quote" id="req-detail-text"></blockquote><p class="req-detail-summary" id="req-detail-summary"></p><details class="req-sent-context"><summary>判定に渡した前提</summary><pre id="req-detail-context"></pre></details><div class="req-question-grid" id="req-question-grid"></div></div>
+        </section>
+
+        <section class="panel req-record-panel" aria-labelledby="req-record-title"><div class="panel-heading"><div><div class="eyebrow">PROVENANCE</div><h2 id="req-record-title">実行の記録</h2></div></div><dl class="req-record-grid"><div><dt>プロバイダー / 使用モデル</dt><dd id="req-record-model">—</dd></div><div><dt>API リクエスト</dt><dd id="req-record-requests">—</dd></div><div><dt>判定時の前提</dt><dd id="req-record-context">—</dd></div><div><dt>実行日時</dt><dd id="req-record-created">—</dd></div></dl><p class="req-record-note" id="req-record-note">API が返すモデル名を記録します。未確認のモデルを Jev として表示しません。</p><div class="req-run-errors" id="req-run-errors" hidden></div></section>
+        <footer class="page-footer"><span>BUG HUNTER <span class="footer-separator">/</span> REQUIREMENT REVIEW</span><span>Read. Question. Refine.</span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

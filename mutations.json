@@ -1,0 +1,250 @@
+{
+  "version": "1.0",
+  "selection": "One runtime C mutation per controller instance; id=0 is reference.",
+  "mutations": [
+    {
+      "id": 1,
+      "title": "E-STOP output is delayed one tick",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "estop_edge",
+      "expected_violation": "E-STOP requires PWM=0 in its first asserted snapshot."
+    },
+    {
+      "id": 2,
+      "title": "Current threshold misses equality",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "current_boundary",
+      "expected_violation": "Current=120 must fault immediately."
+    },
+    {
+      "id": 3,
+      "title": "Truncated tick counter breaks startup across wrap",
+      "category": "OVERFLOW",
+      "severity": "FUNCTIONAL",
+      "scenario": "counter_wrap",
+      "expected_violation": "The uint16 boundary must not create an early startup timeout.",
+      "initial_tick": 65530
+    },
+    {
+      "id": 4,
+      "title": "Stop timestamp is not initialized",
+      "category": "INITIALIZATION",
+      "severity": "FUNCTIONAL",
+      "scenario": "stop_timer",
+      "expected_violation": "STOPPING may not finish before five ticks have elapsed."
+    },
+    {
+      "id": 5,
+      "title": "Startup qualification uses OR instead of AND",
+      "category": "STATE_TRANSITION",
+      "severity": "FUNCTIONAL",
+      "scenario": "startup_or",
+      "expected_violation": "RUNNING requires minimum startup duration and speed qualification together."
+    },
+    {
+      "id": 6,
+      "title": "Invalid sensor frame reuses previous readings",
+      "category": "SENSOR",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "sensor_invalid",
+      "expected_violation": "An invalid sensor frame must latch FAULT immediately."
+    },
+    {
+      "id": 7,
+      "title": "Communication-loss output persists one tick",
+      "category": "TIMING",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "comm_edge",
+      "expected_violation": "Communication loss must set PWM=0 in that snapshot."
+    },
+    {
+      "id": 8,
+      "title": "Rapid START aborts STOPPING",
+      "category": "STATE_TRANSITION",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "rapid_restart",
+      "expected_violation": "STOPPING ignores START until the stopping phase completes."
+    },
+    {
+      "id": 9,
+      "title": "Encoder wrap is treated as a huge reverse jump",
+      "category": "OVERFLOW",
+      "severity": "FUNCTIONAL",
+      "scenario": "encoder_wrap",
+      "expected_violation": "A normal uint16 encoder wrap must preserve signed delta and controller behavior."
+    },
+    {
+      "id": 10,
+      "title": "Fault reset leaves the internal start inhibit set",
+      "category": "INITIALIZATION",
+      "severity": "FUNCTIONAL",
+      "scenario": "reset_inhibit",
+      "expected_violation": "A healthy reset followed by a fresh START must restart."
+    },
+    {
+      "id": 11,
+      "title": "ISR/main stale E-STOP snapshot model",
+      "category": "CONCURRENCY",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "isr_snapshot",
+      "expected_violation": "The scheduled stale-snapshot model delays E-STOP processing.",
+      "model_only": true
+    },
+    {
+      "id": 12,
+      "title": "Missing input reload/volatile model",
+      "category": "CONCURRENCY",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "cached_comm",
+      "expected_violation": "A deliberately cached communication snapshot misses a later link loss.",
+      "model_only": true
+    },
+    {
+      "id": 13,
+      "title": "Power-on PWM register is initialized nonzero",
+      "category": "INITIALIZATION",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "power_on",
+      "expected_violation": "The first OFF snapshot requires PWM=0."
+    },
+    {
+      "id": 14,
+      "title": "Watchdog branch restores stale unsafe PWM",
+      "category": "TIMING",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "watchdog_order",
+      "expected_violation": "Watchdog scheduling must not defer an E-STOP output change."
+    },
+    {
+      "id": 15,
+      "title": "Every thousandth start is dropped",
+      "category": "STATE_TRANSITION",
+      "severity": "FUNCTIONAL",
+      "scenario": "thousandth_start",
+      "expected_violation": "The 1000th accepted START must work like other starts.",
+      "initial_start_count": 999
+    },
+    {
+      "id": 16,
+      "title": "START is given priority over simultaneous STOP",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "stop_priority",
+      "expected_violation": "Simultaneous START and STOP must leave PWM=0."
+    },
+    {
+      "id": 17,
+      "title": "Running state skips the limit interlock",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "limit_running",
+      "expected_violation": "Limit assertion in RUNNING must immediately fault."
+    },
+    {
+      "id": 18,
+      "title": "Temperature threshold misses equality",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "temperature_boundary",
+      "expected_violation": "Temperature=90 must fault immediately."
+    },
+    {
+      "id": 19,
+      "title": "Startup timeout comparison is one tick late",
+      "category": "TIMING",
+      "severity": "FUNCTIONAL",
+      "scenario": "startup_timeout",
+      "expected_violation": "Unqualified STARTING must fault at elapsed=20, not at 21."
+    },
+    {
+      "id": 20,
+      "title": "Stall debounce does not reset after recovery",
+      "category": "TIMING",
+      "severity": "FUNCTIONAL",
+      "scenario": "stall_recovery",
+      "expected_violation": "Only five consecutive low-speed RUNNING samples may trigger a stall fault."
+    },
+    {
+      "id": 21,
+      "title": "Eight-bit current conversion hides high current",
+      "category": "OVERFLOW",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "current_narrowing",
+      "expected_violation": "Current=256 exceeds the 120 threshold and must fault."
+    },
+    {
+      "id": 22,
+      "title": "PWM target clamp is bypassed",
+      "category": "OTHER",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "pwm_saturation",
+      "expected_violation": "PWM must remain within 0..100 even if the target is 140."
+    },
+    {
+      "id": 23,
+      "title": "Brake remains applied on the OFF transition",
+      "category": "STATE_TRANSITION",
+      "severity": "FUNCTIONAL",
+      "scenario": "brake_release",
+      "expected_violation": "Completing STOPPING must release the brake in the OFF snapshot."
+    },
+    {
+      "id": 24,
+      "title": "Held START is accepted again after a stop",
+      "category": "STATE_TRANSITION",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "held_start",
+      "expected_violation": "Restart after stopping requires a new START rising edge."
+    },
+    {
+      "id": 25,
+      "title": "Communication recovery automatically clears a fault",
+      "category": "STATE_TRANSITION",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "comm_recovery",
+      "expected_violation": "Communication recovery alone must not clear the fault latch."
+    },
+    {
+      "id": 26,
+      "title": "Reset clears an actively asserted E-STOP",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "estop_reset",
+      "expected_violation": "An asserted E-STOP must retain EMERGENCY_STOP even if reset is pressed."
+    },
+    {
+      "id": 27,
+      "title": "Fault reset ignores the standstill guard",
+      "category": "INTERLOCK",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "reset_moving",
+      "expected_violation": "Fault reset requires motor_speed<=5."
+    },
+    {
+      "id": 28,
+      "title": "PWM decrement underflows an unsigned byte",
+      "category": "OVERFLOW",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "pwm_underflow",
+      "expected_violation": "Reducing PWM=5 toward zero may not wrap to 251."
+    },
+    {
+      "id": 29,
+      "title": "PWM rise step is four times too large",
+      "category": "TIMING",
+      "severity": "FUNCTIONAL",
+      "scenario": "pwm_slew",
+      "expected_violation": "Active PWM must change by at most ten points per tick."
+    },
+    {
+      "id": 30,
+      "title": "Fault reset destroys START edge history",
+      "category": "INITIALIZATION",
+      "severity": "SAFETY_CRITICAL",
+      "scenario": "reset_start_edge",
+      "expected_violation": "Reset while START stays high must not synthesize a new START edge."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "title": "Motor ECU Bug Hunter — Jev検証ラボ",
+  "games": [{"name": "検証ダッシュボードを開く", "script": "launch.py"}]
+}

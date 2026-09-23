@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Motor ECU · Bug Hunter</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="Bug Hunter ホーム"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>BUG HUNTER<small>EMBEDDED SYSTEMS LAB</small></span></a>
+      <div class="workspace-label">WORKSPACE <span>01</span></div>
+      <nav aria-label="ページナビゲーション">
+        <a class="nav-link" href="/requirements"><span aria-hidden="true">▧</span>要件仕様書レビュー</a>
+        <a class="nav-link active" href="#overview"><span aria-hidden="true">◈</span>実験ダッシュボード</a>
+        <a class="nav-link" href="#cases"><span aria-hidden="true">▤</span>テストケース</a>
+        <a class="nav-link" href="#inspector"><span aria-hidden="true">⌁</span>トレース解析</a>
+        <a class="nav-link" href="#provenance"><span aria-hidden="true">◎</span>実験の記録</a>
+      </nav>
+      <div class="sidebar-spec"><div class="eyebrow">TARGET SYSTEM</div><strong>小型モータ制御 ECU</strong><p>Embedded C + Python SIL</p><div class="state-flow"><span>OFF</span><b>→</b><span>START</span><b>→</b><span>RUN</span><b>→</b><span>STOP</span></div><div class="fault-states"><span>FAULT</span><span>E-STOP</span></div></div>
+      <div class="sidebar-bottom"><span class="status-dot"></span>LOCAL EXPERIMENT<span class="version">v0.1</span></div>
+    </aside>
+
+    <main id="top">
+      <header class="topbar"><div class="breadcrumb">Experiments <span>/</span> Motor ECU</div><span class="environment"><span class="status-dot"></span>SIL SIMULATION</span></header>
+      <div class="main-content">
+        <section class="page-heading" id="overview"><div><div class="eyebrow cyan">AI TEST ORACLE / EXPERIMENT 001</div><h1>Motor ECU <span>Bug Hunter</span></h1><p class="page-subtitle">既知の不具合を再現し、従来テストと Jev の判断を比較する。</p></div><a class="button secondary download-link disabled" id="download-report" href="/api/report" download="motor-ecu-report.json" aria-disabled="true"><span aria-hidden="true">↓</span>レポートを保存</a></section>
+
+        <section class="experiment-control panel" aria-labelledby="experiment-title"><div class="control-title"><div class="icon-square" aria-hidden="true">▶</div><div><h2 id="experiment-title">実験を実行</h2><p>同じ入力系列で、正常系と 30 種類の変異を比較</p></div></div><form id="run-form"><label>判定プロバイダー<select id="provider" name="provider"><option value="classifier">classifier.dev / Jev</option><option value="typesafe">TypeSafe / Jev</option><option value="off">ローカルのみ · AI なし</option></select></label><label class="seed-label">乱数シード<input id="seed" type="number" name="seed" min="0" max="4294967295" value="20260920" step="1" required></label><button class="button primary" id="run-button" type="submit"><span aria-hidden="true">▶</span>実験を開始</button></form><p class="data-notice" id="data-notice">要求仕様と合成トレースを選択した API に送信します。classifier.dev は API キー不要です。</p></section>
+
+        <div class="run-status" role="status" aria-live="polite"><div><span class="status-dot" id="run-dot"></span><strong id="run-phase">READY</strong><span id="run-message">開始すると実測結果が表示されます。</span></div><span class="run-id" id="run-id">NO RUN YET</span></div>
+        <div class="error-banner" id="error-banner" role="alert" hidden></div>
+
+        <section class="metrics-grid" aria-label="主要評価指標">
+          <article class="metric-card"><div class="metric-title">再現できた不具合<span class="metric-icon">◈</span></div><div class="metric-value"><span id="metric-activated">—</span><small>/ 30</small></div><div class="metric-foot">Ground truth で活性化を確認</div><div class="mini-bar"><i id="activated-bar"></i></div></article>
+          <article class="metric-card"><div class="metric-title">従来テストの検出<span class="metric-icon">⌘</span></div><div class="metric-value"><span id="metric-conventional">—</span><small>/ 30</small></div><div class="metric-foot">実装した決定的ルール</div><div class="mini-bar gray"><i id="conventional-bar"></i></div></article>
+          <article class="metric-card featured"><div class="metric-title">AI オラクルの検出<span class="pill cyan-pill" id="ai-model-badge">AI</span></div><div class="metric-value cyan"><span id="metric-ai">—</span><small>/ 30</small></div><div class="metric-foot" id="ai-metric-note">API の実測結果を表示</div><div class="mini-bar"><i id="ai-bar"></i></div></article>
+          <article class="metric-card"><div class="metric-title">従来 + AI の検出<span class="metric-icon orange">✦</span></div><div class="metric-value"><span id="metric-combined">—</span><small>/ 30</small></div><div class="metric-foot">どちらか一方で検出した不具合</div><div class="mini-bar orange-bar"><i id="combined-bar"></i></div></article>
+        </section>
+
+        <section class="analysis-grid">
+          <article class="panel comparison-panel"><div class="panel-heading"><div><div class="eyebrow">DETECTION COVERAGE</div><h2>検出率の比較</h2></div><span class="quiet-badge">30 BUG TYPES</span></div><div class="comparison-chart"><div class="comparison-row"><span>従来テスト</span><div class="comparison-track"><i class="traditional" id="compare-conventional"></i></div><strong id="compare-conventional-label">—</strong></div><div class="comparison-row"><span>AI ????</span><div class="comparison-track"><i id="compare-ai"></i></div><strong id="compare-ai-label">—</strong></div><div class="comparison-row"><span>従来 + AI</span><div class="comparison-track"><i class="combined" id="compare-combined"></i></div><strong id="compare-combined-label">—</strong></div><div class="chart-axis"><span>0</span><span>10</span><span>20</span><span>30</span></div></div><p class="panel-caption" id="comparison-note">未実行の項目は「—」で表示します。検出率の分母は全 30 種類です。</p></article>
+          <article class="panel quality-panel"><div class="panel-heading"><div><div class="eyebrow">ORACLE QUALITY</div><h2>判定の品質とコスト</h2></div><span class="live-tag">MEASURED</span></div><div class="quality-grid"><div><span>正常系の誤検出率</span><strong id="metric-fpr">—</strong><small id="healthy-count">正常系 — 窓</small></div><div><span>平均 confidence</span><strong id="metric-confidence">—</strong><small>モデルの確信度（正解率ではない）</small></div><div><span>平均 API 応答時間</span><strong id="metric-latency">—</strong><small>要求 1 件あたり</small></div><div><span>API 報告コスト</span><strong id="metric-cost">—</strong><small id="million-cost">100 万ケース換算：—</small></div></div></article>
+        </section>
+
+        <section class="panel cases-panel" id="cases"><div class="panel-heading"><div><div class="eyebrow">TEST WINDOWS</div><h2>ケースを調べる <span class="count-badge" id="case-count">0</span></h2></div><div class="case-tools"><label class="search-box"><span aria-hidden="true">⌕</span><input id="case-search" type="search" placeholder="ID・不具合名で検索" aria-label="ケースを検索"></label><select id="category-filter" aria-label="カテゴリで絞り込み"><option value="all">すべてのカテゴリ</option></select></div></div><div class="case-tabs" role="group" aria-label="ケースフィルター"><button type="button" class="case-tab selected" data-filter="all" aria-pressed="true">すべて</button><button type="button" class="case-tab" data-filter="bugs" aria-pressed="false">不具合</button><button type="button" class="case-tab" data-filter="healthy" aria-pressed="false">正常系</button><button type="button" class="case-tab" data-filter="ai-only" aria-pressed="false">AI のみ検出</button><button type="button" class="case-tab" data-filter="false-positive" aria-pressed="false">誤検出</button><span class="table-hint">行を選択してトレースを確認</span></div><div class="table-scroll"><table class="case-table"><thead><tr><th>ケース / 不具合</th><th>分類</th><th>真値</th><th>従来テスト</th><th>AI 判定</th><th>Confidence</th><th aria-label="詳細"></th></tr></thead><tbody id="case-table-body"></tbody></table><div class="empty-state" id="cases-empty"><div class="empty-icon" aria-hidden="true">⌁</div><strong>まだ実験結果がありません</strong><p>実験を開始すると、ケースごとの検出結果がここに表示されます。</p></div></div><div class="table-footer"><span id="table-result-count">0 件</span><span>AI 検出：P(SUSPICIOUS) + P(FAULT) ≥ 50%</span></div></section>
+
+        <section class="panel inspector-panel" id="inspector"><div class="panel-heading"><div><div class="eyebrow">TRACE INSPECTOR</div><h2 id="selected-title">ケースを選択</h2></div><span class="quiet-badge" id="selected-id">NO SELECTION</span></div><div class="inspector-empty" id="inspector-empty">上の一覧からケースを選ぶと、PWM・速度の推移と AI の回答を確認できます。</div><div id="inspector-content" hidden><div class="selected-meta" id="selected-meta"></div><div class="trace-legend"><span><i class="legend-pwm"></i>PWM（左軸）</span><span><i class="legend-speed"></i>回転速度（右軸）</span><span><i class="legend-estop"></i>E-STOP 有効</span></div><div class="trace-chart"><canvas id="trace-canvas" role="img" aria-label="選択したケースの PWM と回転速度の時系列。数値は下のサイクル詳細で確認できます。"></canvas></div><div class="cycle-control"><label for="cycle-index">サイクル詳細</label><input id="cycle-index" type="range" min="0" max="0" value="0"><output for="cycle-index" id="cycle-label">—</output></div><dl class="cycle-details" id="cycle-details"></dl><div class="oracle-heading"><h3>AI の独立した判断</h3><span id="selected-model">未実行</span></div><div class="questions-grid" id="questions-grid"></div><div class="violations"><h3>従来テストの検出内容</h3><ul id="violation-list"></ul></div></div></section>
+
+        <section class="panel provenance-panel" id="provenance"><div class="panel-heading"><div><div class="eyebrow">REPRODUCIBILITY</div><h2>実験の記録</h2></div><span class="quiet-badge" id="static-analysis-status">静的解析：未実行</span></div><dl class="provenance-grid"><div><dt>RUN ID</dt><dd id="provenance-run">—</dd></div><div><dt>SEED</dt><dd id="provenance-seed">—</dd></div><div><dt>PROVIDER / MODEL</dt><dd id="provenance-model">—</dd></div><div><dt>AI WINDOWS</dt><dd id="provenance-windows">—</dd></div></dl><ul class="experiment-notes" id="experiment-notes"><li>計測前の数値を推定値で埋めることはありません。</li></ul><div class="scope-note"><span aria-hidden="true">ⓘ</span><p>この実験は SIL 上の比較評価です。race・volatile の模擬再現は実機での証明を意味しません。AI 判定は安全性の証明には使用しません。</p></div></section>
+        <footer class="page-footer"><span>BUG HUNTER <span class="footer-separator">/</span> MOTOR CONTROL EXPERIMENT</span><span>Observe. Classify. Verify.</span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

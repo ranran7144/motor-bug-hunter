@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "tick_ms": 10,
+  "text": "Each row is the post-step result for its input snapshot; tick=10ms. Start from OFF/PWM=0/brake=0. Emergency-stop has highest priority: asserted E-STOP must yield EMERGENCY_STOP and PWM=0 in that step. Invalid sensors, dead communication, current>=120, temperature>=90, limit switch or |wrapped encoder delta|>500 must latch FAULT/PWM=0 immediately. Counter and encoder wrap must not change behavior. Fault/E-STOP remain latched until inputs are healthy, reset is pressed and speed<=5; reset enters OFF and clears internal inhibit. STOP takes priority over START. A fresh rising START in OFF begins STARTING; holding START must never restart after a stop/reset. STARTING needs elapsed>=5 ticks AND speed>=30 to enter RUNNING; otherwise it faults at elapsed>=20. Active PWM tracks target clamped to [0,100], moving by at most 10 per tick. STOP enters STOPPING with PWM=0/brake=1 that step; STOPPING ignores START and lasts at least 5 ticks and until speed<=5, then enters OFF/brake=0. OFF, FAULT and EMERGENCY_STOP require PWM=0. Five consecutive RUNNING samples with speed<5 cause FAULT; any speed recovery resets this counter. Each valid start, including the 1000th, must work. Watchdog scheduling must not postpone safety checks. Speed may remain positive while PWM is zero because the plant coasts. Fault reset may not consume a held START as a new edge.",
+  "thresholds": {
+    "current_limit": 120,
+    "temperature_limit": 90,
+    "start_min_ticks": 5,
+    "start_timeout_ticks": 20,
+    "stop_min_ticks": 5,
+    "stall_ticks": 5,
+    "encoder_max_step": 500,
+    "pwm_max": 100,
+    "pwm_step": 10
+  },
+  "units": {
+    "motor_current": "0.1 A",
+    "motor_speed": "arbitrary normalized speed units",
+    "encoder_position": "uint16 counts",
+    "temperature": "degrees C",
+    "pwm": "percent"
+  },
+  "sil_method": "The healthy C controller drives a Python inertial motor plant to record a sensor/input tape. Healthy and mutant C instances replay exactly the same tape. This is record/replay SIL, not a closed-loop mutant stability experiment.",
+  "ground_truth": "Every reference trace must pass deterministic checks. Each positive case requires observable divergence from its paired healthy C run on identical inputs AND an independently coded, scenario-specific witness of the expected requirement violation. Ground-truth witness rules know the authored scenario and are not scored as detectors. Mutation identity and witness data are evaluation metadata, never classifier features.",
+  "limits": [
+    "No safety certification or proof is implied.",
+    "ISR race and missing volatile are explicit behavioral models; actual interrupt timing and compiler optimization are not exercised.",
+    "Counter-boundary fixtures initialize tick/start count near the boundary; they do not execute 65536 ticks or 1000 full start/stop sequences.",
+    "Scenarios and thresholds are authored demonstrations, not a random sample of production failures."
+  ]
+}
